@@ -1,0 +1,17 @@
+{
+  "globals": {
+      "ts-jest": {
+        "tsConfigFile": "./tsconfig.json"
+      }
+  },
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js?|ts?)$",
+  "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+  ],
+  "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+  }
+}

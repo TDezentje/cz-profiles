@@ -1,0 +1,9 @@
+import * as express from 'express';
+import * as path from 'path';
+
+const STATIC_PATH = path.resolve('assets');
+const STATIC_OPTS = {
+  maxAge: 31536000000
+};
+
+export default express.static(STATIC_PATH, STATIC_OPTS);

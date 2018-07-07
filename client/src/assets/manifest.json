@@ -1,0 +1,9 @@
+{
+    "short_name": "CZ Profiles",
+    "name": "CZ Profiles",
+    "start_url": "/",
+    "background_color": "#ffa301",
+    "theme_color": "#ffa301",
+    "display": "standalone",
+    "lang": "nl-NL"
+}
