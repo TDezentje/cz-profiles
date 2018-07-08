@@ -42,6 +42,7 @@ export class CzProfileListElement extends HTMLElement {
         this.addButton.addEventListener('click', this.onAddClick);
 
         this.profileService.addEventListener('created', this.refresh);
+        this.profileService.addEventListener('updated', this.refresh);
         this.profileService.addEventListener('deleted', this.onDelete);
 
         await this.refresh();
@@ -73,6 +74,9 @@ export class CzProfileListElement extends HTMLElement {
 
     private async refresh() {
         this.profiles = await this.profileService.list();
+        this.profiles.sort((a,b) => {
+            return a.name.localeCompare(b.name); 
+        });
         this.renderProfiles();
     }
 
