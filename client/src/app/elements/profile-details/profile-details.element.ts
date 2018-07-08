@@ -178,7 +178,9 @@ export class CzProfileDetailsElement extends HTMLElement {
     private async onRemove(event) {
         event.preventDefault();
         if(this.model._id) {
+            this.overlay.showToast('Profiel verwijderen...');
             await this.profileService.delete(this.model);
+            this.overlay.finishToast('Profiel is verwijderd');
         }
         
         this.onClose();
@@ -204,13 +206,16 @@ export class CzProfileDetailsElement extends HTMLElement {
         }
 
         if(isValid){
+            this.overlay.showToast('Profiel opslaan...');
             if(this.model._id){
-                this.profileService.update(this.model);
+                await this.profileService.update(this.model);
             } else {
                 const model = await this.profileService.create(this.model);
                 this.model._id = model._id;
                 history.replaceState(undefined, '', `/${this.model._id}`);
             }
+
+            this.overlay.finishToast('Profiel is opgeslagen');
         }
     }
 }

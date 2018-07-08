@@ -1,5 +1,7 @@
 @import '../../../mixins/icons.scss';
 @import '../../../mixins/animation.scss';
+@import '../../../mixins/elevation.scss';
+@import '../../../mixins/responsive.scss';
 
 
 :host {
@@ -50,5 +52,32 @@
         color: white;
         font-size: 40px;
         pointer-events: none;
+    }
+}
+
+.toast-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#toast {
+    background-color: #313131;
+    color: white;
+    padding: 16px 24px;
+    box-sizing: border-box;
+    transition: transform 200ms $animation-standard-curve;
+    
+    @include elevation(1);
+
+    @include size-xs {
+        width: 100%;
+    }
+
+    &.hidden {
+        transform: translateY(100%);
     }
 }

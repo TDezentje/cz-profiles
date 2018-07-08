@@ -7,11 +7,15 @@ template.innerHTML = `
         <span class="icon">file_upload</span>
         <div class="title">Upload foto</div>
     </div>
+    <div class="toast-container">
+        <div id="toast" class="hidden"></div>
+    </div>
 `;
 
 export class CzOverlayElement extends HTMLElement {
     public fileListener;
     private dropFileElement: HTMLElement;
+    private toast: HTMLElement;
 
     constructor() {
         super();
@@ -20,7 +24,6 @@ export class CzOverlayElement extends HTMLElement {
         this.onDragEnter = this.onDragEnter.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragLeave = this.onDragLeave.bind(this);
-
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -33,7 +36,20 @@ export class CzOverlayElement extends HTMLElement {
         this.addEventListener('dragover', this.onDragOver);
         this.addEventListener('dragleave', this.onDragLeave);
 
+        this.toast = this.shadowRoot.getElementById('toast');
         this.dropFileElement = this.shadowRoot.getElementById('drop-files')
+    }
+
+    public async showToast(text: string) {
+        this.toast.textContent = text;
+        this.toast.classList.remove('hidden');
+    }
+
+    public async finishToast(text: string) {
+        this.toast.textContent = text;
+        setTimeout(() => {
+            this.toast.classList.add('hidden');
+        }, 1000);
     }
 
     private onDrop(e) {
