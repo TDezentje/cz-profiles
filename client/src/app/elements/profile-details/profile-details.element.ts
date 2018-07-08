@@ -48,6 +48,7 @@ export class CzProfileDetailsElement extends HTMLElement {
         this.onFileDrop = this.onFileDrop.bind(this);
         this.onFileInput = this.onFileInput.bind(this);
         this.onClose = this.onClose.bind(this);
+        this.onPopState = this.onPopState.bind(this);
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -66,6 +67,18 @@ export class CzProfileDetailsElement extends HTMLElement {
         this.shadowRoot.getElementById('save-button').addEventListener('click', this.onSubmit);
         this.shadowRoot.getElementById('remove-button').addEventListener('click', this.onRemove);
         this.shadowRoot.getElementById('back-button').addEventListener('click', this.onClose);
+
+        window.addEventListener('popstate', this.onPopState);
+    }
+
+    private async onPopState() {
+        if(location.pathname === '/') {
+            this.classList.add('empty');
+            await this.hideContent();
+            this.model = undefined;
+            this.noContent.classList.remove('hidden');
+            this.overlay.fileListener = undefined;
+        }
     }
 
     public async createNewProfile() {
@@ -172,11 +185,7 @@ export class CzProfileDetailsElement extends HTMLElement {
     }
 
     private async onClose() {
-        this.classList.add('empty');
-        await this.hideContent();
-        this.model = undefined;
-        this.noContent.classList.remove('hidden');
-        this.overlay.fileListener = undefined;
+        history.back();
     }
 
     private async onSubmit(event) {
@@ -195,12 +204,12 @@ export class CzProfileDetailsElement extends HTMLElement {
         }
 
         if(isValid){
-
             if(this.model._id){
                 this.profileService.update(this.model);
             } else {
                 const model = await this.profileService.create(this.model);
                 this.model._id = model._id;
+                history.replaceState(undefined, '', `/${this.model._id}`);
             }
         }
     }

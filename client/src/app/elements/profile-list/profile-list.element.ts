@@ -30,6 +30,7 @@ export class CzProfileListElement extends HTMLElement {
         this.refresh = this.refresh.bind(this);
         this.onAddClick = this.onAddClick.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onPopState = this.onPopState.bind(this);
         
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -42,7 +43,25 @@ export class CzProfileListElement extends HTMLElement {
 
         this.profileService.addEventListener('created', this.refresh);
         this.profileService.addEventListener('deleted', this.onDelete);
-        this.refresh();
+
+        await this.refresh();
+
+        window.addEventListener('popstate', this.onPopState);
+        this.onPopState();
+    }
+
+    private onPopState() {
+        if(location.pathname === '/new') {
+            this.dispatchEvent(new Event('addclick'));
+        } else if(location.pathname !== '/') {
+            const id = location.pathname.substr(1);
+            const profile = this.profiles.find(p => p._id === id);
+            if(profile) {
+                this.dispatchEvent(new CustomEvent('itemclick', {
+                    detail: profile
+                }));
+            }
+        }
     }
 
     private onDelete(event) {
@@ -77,11 +96,13 @@ export class CzProfileListElement extends HTMLElement {
         this.dispatchEvent(new CustomEvent('itemclick', {
             detail: event.target.profile
         }));
+        history.pushState(undefined, '', `/${event.target.profile._id}`);
     }
 
     private onAddClick(event) {
         event.preventDefault();
         this.dispatchEvent(new Event('addclick'));
+        history.pushState(undefined, '', '/new');
     }
 }
 
