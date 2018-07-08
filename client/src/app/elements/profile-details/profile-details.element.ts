@@ -1,7 +1,9 @@
-import '../input/input.element';
-import { CzInputElement } from '../input/input.element';
+import './overlay/overlay.element';
+import './input/input.element';
+import { CzInputElement } from './input/input.element';
 import { Profile } from '../../models/profile.model';
 import { ProfileService } from '../../services/profile.service';
+import { CzOverlayElement } from './overlay/overlay.element';
 
 const css = require('./profile-details.scss');
 
@@ -13,9 +15,10 @@ template.innerHTML = `
     </div>
     <form id="form" class="content hidden">
         <div class="photo-container">
-            <div class="photo">
-                <div class="icon">cloud_upload</div>
-            </div>
+            <input type="file" name="file" id="file"/>
+            <label id="photo" class="empty" for="file">
+                <div class="icon">face</div>
+            </label>
         </div>
         <cz-input type="text" name="name" label="Naam" required></cz-input>
         <cz-input type="text" name="functionTitle" label="Functie" required></cz-input>
@@ -24,6 +27,7 @@ template.innerHTML = `
         <cz-input type="textarea" name="biography" label="Biografie"></cz-input>
         <div class="button-container"><button id="remove-button">Verwijderen</button><button id="save-button">Opslaan</button></div>
     </form>
+    <cz-overlay></cz-overlay>
 `;
 
 export class CzProfileDetailsElement extends HTMLElement {
@@ -31,13 +35,17 @@ export class CzProfileDetailsElement extends HTMLElement {
     private form: HTMLFormElement;
     private noContent: HTMLElement;
     private model: Profile;
-    
+    private overlay: CzOverlayElement;
+    private fileInput: HTMLInputElement;
+    private photo: HTMLElement;
+
     constructor() {
         super();
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onRemove = this.onRemove.bind(this);
-
+        this.onFileDrop = this.onFileDrop.bind(this);
+        this.onFileInput = this.onFileInput.bind(this)
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
@@ -45,6 +53,11 @@ export class CzProfileDetailsElement extends HTMLElement {
     public async connectedCallback() {
         this.noContent = this.shadowRoot.getElementById('no-content');
         this.form = <HTMLFormElement>this.shadowRoot.getElementById('form');
+        this.overlay = this.shadowRoot.querySelector('cz-overlay');
+        this.photo = this.shadowRoot.getElementById('photo');
+        
+        this.fileInput = <HTMLInputElement>this.shadowRoot.getElementById('file');
+        this.fileInput.addEventListener('change', this.onFileInput);
 
         this.shadowRoot.getElementById('save-button').addEventListener('click', this.onSubmit);
         this.shadowRoot.getElementById('remove-button').addEventListener('click', this.onRemove);
@@ -55,6 +68,7 @@ export class CzProfileDetailsElement extends HTMLElement {
         this.model = new Profile();
         this.updateFieldsWithModel();
         this.form.classList.remove('hidden');
+        this.overlay.fileListener = this.onFileDrop;
     }
 
     public async showProfile(profile: Profile) {
@@ -67,10 +81,40 @@ export class CzProfileDetailsElement extends HTMLElement {
         this.updateFieldsWithModel();
         
         this.form.classList.remove('hidden');
+        this.overlay.fileListener = this.onFileDrop;
+    }
+
+    private onFileInput(event) {
+        this.onFileDrop(this.fileInput.files);
+    }
+
+    private async onFileDrop(files) {
+        const file = files[0];
+
+        if(file.type !== 'image/jpeg' && file.type !== 'image/png') {
+            return;
+        }
+
+        const base64 = await this.readFile(file);
+        this.model.photo = base64;
+
+        this.photo.style.backgroundImage = `url('${base64}')`;
+        this.photo.classList.remove('empty');
+    }
+    
+    private readFile(file): Promise<string> {
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
     private updateFieldsWithModel() {
         const inputs: CzInputElement[] = this.form.querySelectorAll('cz-input') as any;
+
         for (const input of Array.from(inputs)) {
             const value = this.model[input.name];
             if(value instanceof  Date) {
@@ -78,7 +122,14 @@ export class CzProfileDetailsElement extends HTMLElement {
             } else {
                 input.value =  value || '';
             }
-            
+        }
+
+        if(this.model.photo) {
+            this.photo.style.backgroundImage = `url('${this.model.photo}')`;
+            this.photo.classList.remove('empty');
+        } else {
+            this.photo.style.backgroundImage = '';
+            this.photo.classList.add('empty');
         }
     }
 
@@ -113,6 +164,7 @@ export class CzProfileDetailsElement extends HTMLElement {
         await this.hideContent();
         this.model = undefined;
         this.noContent.classList.remove('hidden');
+        this.overlay.fileListener = undefined;
     }
 
     private async onSubmit(event) {

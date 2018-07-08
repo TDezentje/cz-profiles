@@ -1,0 +1,54 @@
+@import '../../../mixins/icons.scss';
+@import '../../../mixins/animation.scss';
+
+
+:host {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.interactive {
+    pointer-events: all;
+}
+
+.icon {
+    @include material-icon;
+}
+
+.dropping-files {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 162, 1, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transition: opacity  300ms $animation-standard-curve;
+    opacity: 1;
+    pointer-events: all;
+
+    &.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .icon {
+        font-size: 80px;
+        color: white;
+        pointer-events: none;
+    }
+
+    .title {
+        content: "Upload bestanden";
+        color: white;
+        font-size: 40px;
+        pointer-events: none;
+    }
+}

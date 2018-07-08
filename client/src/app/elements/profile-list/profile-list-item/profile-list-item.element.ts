@@ -45,8 +45,17 @@ export class CzProfileListItemElement extends HTMLElement {
 
     private updateView() {
         this.name.textContent = this.profile.name;
-        this.photo.classList.add('icon', 'empty');
-        this.photo.textContent = 'face';
+
+
+        if(this.profile.photo) {
+            this.photo.style.backgroundImage = `url('${this.profile.photo}')`;
+            this.photo.classList.remove('icon', 'empty');
+            this.photo.textContent = '';
+        } else {
+            this.photo.style.backgroundImage = '';
+            this.photo.classList.add('icon', 'empty');
+            this.photo.textContent = 'face';
+        }
     }
 }
 

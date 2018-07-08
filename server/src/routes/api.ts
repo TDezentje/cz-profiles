@@ -23,7 +23,8 @@ api.post('/profiles', async (req, res) => {
         functionTitle: body.functionTitle,
         birthdate: body.birthdate,
         address: body.address,
-        biography: body.biography
+        biography: body.biography,
+        photo: body.photo
     });
     const result = await profile.save();
 
@@ -44,7 +45,8 @@ api.put('/profiles/:id', async (req, res) => {
     profile.birthdate = body.birthdate;
     profile.address = body.address;
     profile.biography = body.biography;
-
+    profile.photo = body.photo;
+    
     await profile.save();
 
     res.send(body);

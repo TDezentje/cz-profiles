@@ -53,24 +53,34 @@
     align-items: center;
 }
 
-.photo {
+#photo {
     height: 120px;
     width: 120px;
-    background: $accent;
     border-radius: 50%;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    border: 10px solid $accent-light;
     transform-origin: center center;
     transition: transform 400ms $animation-standard-curve;
     transition-delay: 100ms;
-    @include elevation(1);
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
 
     .icon {
+        display: none;
         font-size: 40px;
+    }
+
+    &.empty {
+        background: $accent;
+        border: 10px solid $accent-light;
+
+        .icon {
+            display: block;
+        }
     }
 }
 
@@ -101,8 +111,12 @@ button {
     }
 }
 
+#file {
+    display: none;
+}
+
 .content.hidden {
-    .photo {
+    #photo {
         transform: scale(0);
     }
 

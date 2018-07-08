@@ -3,6 +3,7 @@ export class Profile {
     public name: string;
     public functionTitle: string;
     public birthdate: Date;
-    public address: String;
-    public biography: String;
+    public address: string;
+    public biography: string;
+    public photo: string;
 }

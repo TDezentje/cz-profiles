@@ -1,5 +1,6 @@
 import './elements/profile-details/profile-details.element';
 import './elements/profile-list/profile-list.element';
+
 import { CzProfileDetailsElement } from './elements/profile-details/profile-details.element';
 import { CzProfileListElement } from './elements/profile-list/profile-list.element';
 

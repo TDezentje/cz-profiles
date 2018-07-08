@@ -27,14 +27,16 @@
 #photo {
     width: 40px;
     height: 40px;
-
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    
     &.empty {
         color: white;
         background-color: #B1B1B1;
         box-sizing: border-box;
         line-height: 40px;
         text-align: center;
-        border-radius: 50%;
     }
 }
 
