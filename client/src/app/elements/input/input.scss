@@ -1,0 +1,58 @@
+@import '../../mixins/colors.scss';
+@import '../../mixins/animation.scss';
+
+:host {
+    display: block;
+    position: relative;
+    margin: 8px 0;
+
+    textarea {
+        height: 150px;
+    }
+
+    textarea,
+    input {
+        z-index: 0;
+        font-size: 14px;
+        padding: 8px;
+        border: 1px solid #d1d1d1;
+        border-radius: 2px;
+        width: 100%;
+        box-sizing: border-box;
+        outline: none !important;
+        transition: border-color 200ms $animation-standard-curve;
+
+        &:focus {
+            border-color: $primary;
+        }
+
+        &:focus + label,
+        &.has-value + label {
+            transform: translate(-6px, -16px) scale(0.75);
+            background-color: white;
+            color: #2e2e2e;
+        }
+
+        &[type="date"] + label {
+            transform: translate(-14px, -16px) scale(0.75);
+            background-color: white;
+        }
+
+        &.error {
+            border-color: $accent;
+        }
+    }
+
+    label {
+        position: absolute;
+        z-index: 1;
+        padding: 4px 4px 0 4px;
+        pointer-events: none;
+        left: 4px;
+        top: 4px;
+        will-change: transform;
+        transition: transform 200ms $animation-standard-curve,
+                    background-color 200ms $animation-standard-curve,
+                    color 200ms $animation-standard-curve;
+    }
+}

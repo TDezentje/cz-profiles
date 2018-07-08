@@ -1,0 +1,131 @@
+@import '../../mixins/icons.scss';
+@import '../../mixins/colors.scss';
+@import '../../mixins/elevation.scss';
+@import '../../mixins/animation.scss';
+
+:host {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 0;
+    flex: 1;
+    background: white;
+    overflow: auto;
+    height: 100%;
+}
+
+.icon {
+    @include material-icon;
+}
+
+.content {
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+
+    .button-container,
+    cz-input {
+        transition: opacity 200ms $animation-standard-curve,
+                    transform 200ms $animation-standard-curve;
+        transition-delay: 250ms;
+    }
+}
+
+.no-content {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 200ms $animation-standard-curve;
+}
+
+.photo-container {
+    width:100%;
+    height: 150px;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo {
+    height: 120px;
+    width: 120px;
+    background: $accent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: 10px solid $accent-light;
+    transform-origin: center center;
+    transition: transform 400ms $animation-standard-curve;
+    transition-delay: 100ms;
+    @include elevation(1);
+
+    .icon {
+        font-size: 40px;
+    }
+}
+
+.button-container {
+    align-self: flex-end;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: $primary;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    outline: none !important;
+    transition: background-color 200ms $animation-standard-curve,
+                box-shadow 200ms $animation-standard-curve;
+
+    &:hover {
+        @include elevation(1);
+        background-color: $primary-dark;
+    }
+
+    &:active {
+        @include elevation(0);
+        background-color: $primary-dark;
+    }
+}
+
+.content.hidden {
+    .photo {
+        transform: scale(0);
+    }
+
+    .button-container,
+    cz-input {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+}
+.no-content.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#remove-button {
+    background-color: $accent;
+    margin-right: 8px;
+ 
+    &:hover {
+        background-color: $accent-dark;
+    }
+
+    &:active {
+        background-color: $accent-dark;
+    }
+}

@@ -27,8 +27,6 @@ const common = {
             use: [{
                 loader: 'css-loader',
                 options: {
-                    modules: true,
-                    localIdentName: '[hash:base64:6]',
                     minimize: true
                 }
             }, {

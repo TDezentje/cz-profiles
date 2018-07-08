@@ -1,4 +1,4 @@
-version: '1'
+version: '3'
 
 services: 
 
@@ -6,7 +6,7 @@ services:
     image: mongo:latest
     container_name: "cz-mongodb"
     ports:
-      - 8081:8081
+      - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: cz-password
