@@ -20,6 +20,7 @@
         width: 100%;
         box-sizing: border-box;
         outline: none !important;
+        background: white;
         transition: border-color 200ms $animation-standard-curve;
 
         &:focus {

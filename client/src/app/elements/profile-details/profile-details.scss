@@ -2,6 +2,7 @@
 @import '../../mixins/colors.scss';
 @import '../../mixins/elevation.scss';
 @import '../../mixins/animation.scss';
+@import '../../mixins/responsive.scss';
 
 :host {
     position: relative;
@@ -16,6 +17,16 @@
 
 .icon {
     @include material-icon;
+}
+
+
+#back-button {
+    cursor: pointer;
+    display: none;
+    
+    @include size-xs {
+        display: block;
+    }
 }
 
 .content {

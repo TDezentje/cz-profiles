@@ -14,6 +14,7 @@ template.innerHTML = `
         <span>Selecteer of maak een nieuw profiel</span>
     </div>
     <form id="form" class="content hidden">
+        <div id="back-button" class="icon">arrow_back</div>
         <div class="photo-container">
             <input type="file" name="file" id="file"/>
             <label id="photo" class="empty" for="file">
@@ -45,12 +46,15 @@ export class CzProfileDetailsElement extends HTMLElement {
         this.onSubmit = this.onSubmit.bind(this);
         this.onRemove = this.onRemove.bind(this);
         this.onFileDrop = this.onFileDrop.bind(this);
-        this.onFileInput = this.onFileInput.bind(this)
+        this.onFileInput = this.onFileInput.bind(this);
+        this.onClose = this.onClose.bind(this);
+
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
     public async connectedCallback() {
+        this.classList.add('empty');
         this.noContent = this.shadowRoot.getElementById('no-content');
         this.form = <HTMLFormElement>this.shadowRoot.getElementById('form');
         this.overlay = this.shadowRoot.querySelector('cz-overlay');
@@ -61,12 +65,14 @@ export class CzProfileDetailsElement extends HTMLElement {
 
         this.shadowRoot.getElementById('save-button').addEventListener('click', this.onSubmit);
         this.shadowRoot.getElementById('remove-button').addEventListener('click', this.onRemove);
+        this.shadowRoot.getElementById('back-button').addEventListener('click', this.onClose);
     }
 
     public async createNewProfile() {
         await this.hideContent();
         this.model = new Profile();
         this.updateFieldsWithModel();
+        this.classList.remove('empty');
         this.form.classList.remove('hidden');
         this.overlay.fileListener = this.onFileDrop;
     }
@@ -78,6 +84,7 @@ export class CzProfileDetailsElement extends HTMLElement {
 
         await this.hideContent();
         this.model = profile;
+        this.classList.remove('empty');
         this.updateFieldsWithModel();
         
         this.form.classList.remove('hidden');
@@ -160,7 +167,12 @@ export class CzProfileDetailsElement extends HTMLElement {
         if(this.model._id) {
             await this.profileService.delete(this.model);
         }
+        
+        this.onClose();
+    }
 
+    private async onClose() {
+        this.classList.add('empty');
         await this.hideContent();
         this.model = undefined;
         this.noContent.classList.remove('hidden');

@@ -1,0 +1,11 @@
+@mixin size-xs () {
+    @media (max-width: 750px) {
+        @content;
+    }
+}
+
+@mixin size-gt-xs () {
+    @media (min-width: 751px) {
+        @content;
+    }
+}
